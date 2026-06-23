@@ -8,7 +8,7 @@ The rbx-api-luau will automatically create an module for it and configure, so th
 
 ```luau
 -- Assuming you've imported rbx-api-luau and saved in a variable (e.g: rbx_api)...
-local client_studio = rbx_api.GetModule("projects_using_this/client-studio/src/main.lua") -- The main file and module that will run anything.
+local client_studio = rbx_api.GetModule("client-studio") -- The main file and module that will run anything.
 client_studio:Init() -- Start the module.
 ```
 

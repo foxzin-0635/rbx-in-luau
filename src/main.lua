@@ -9,7 +9,7 @@ local function typeof_hook(v: any)
     return dtypeof(v)
 end
 
-local function githubRequire(path: string)
+local function githubRequire(path: string, nameReplacement: string?)
     local OWNER = "foxzin-0635"
     local REPO = "rbx-api-luau"
     local FILE_PATH = path
@@ -55,7 +55,7 @@ local function githubRequire(path: string)
         
         if not res then error("Module '"..cleanPath.."' compiled successfully, but no result was given. Did you forgot to add a 'return' statement?") end
         
-        __modules[cleanPath] = res
+        if nameReplacement then __modules[nameReplacement] = res else __modules[cleanPath] = res end
         return res
     else
         error("Failed to fetch file: Website gave code " .. tostring(response.StatusCode) .. ".")
@@ -68,6 +68,9 @@ end
 
 -- Classes
 githubRequire("src/classes/Object.lua") -- Base class
+
+-- Subprojects
+githubRequire("projects_using_this/client-studio/src/main.lua", "client-studio") -- client-studio subproject
 
 -- Add helper method
 __modules.GetModule = GetModule
