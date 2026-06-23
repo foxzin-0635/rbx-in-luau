@@ -52,6 +52,7 @@ local Object = setmetatable({}, {
     -- WARNING: executor level access!
     if getfenv().get_thread_identity() >= 7 then
       if not k == "members" and not k == "inheritTree" then
+        print(true)
         return Object_metadata[k]
       end
     end
