@@ -1,3 +1,4 @@
+local Runtime = githubRequire("src/utils/Runtime.lua")
 local Object_metadata = {}
 
 -- for typeof_hook(v)
@@ -50,10 +51,10 @@ Object_metadata = {
 }
 
 local Object = setmetatable({}, {
-  __metatable = "The metatable is locked.",
+  __metatable = "The metatable is locked",
   __index = function(t,k)
     -- WARNING: executor level access!
-    if getfenv().get_thread_identity() >= 7 then
+    if Runtime:IsCoreScript() then
       if k ~= "members" and k ~= "inheritTree" then
         return Object_metadata[k]
       end
