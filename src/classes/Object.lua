@@ -44,7 +44,7 @@ setmetatable(Object, {
       end
     end
   end,
-  __tostring = Object.ClassName,
+  __tostring = Object_metadata.members.ClassName.Value,
   __newindex = function(t, k, v)
     for mk,mt in pairs(Object_metadata.members) do
       if mk == k then
