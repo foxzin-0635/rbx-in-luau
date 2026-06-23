@@ -4,7 +4,7 @@ local dtypeof = typeof
 
 local function typeof_hook(v: any)
     if dtypeof(v) == "table" then
-        if (v.gettype) then return v.gettype() else return dtypeof(v) end
+        if v.gettype then return v.gettype() else return dtypeof(v) end
     end
     return dtypeof(v)
 end
