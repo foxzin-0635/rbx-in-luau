@@ -70,7 +70,7 @@ end
 local function GetModule(path: string)
     config.SimulatedIdentityHacks.NotAccessibleSecurity.CanUse = true
     local md = __modules[path:gsub("^%./", "")]
-    if not md then error("Cannot get module '"..path.."' since it's non-existent.")
+    if not md then error("Cannot get module '"..path.."' since it's non-existent.") end
     local cur_idl = getfenv().get_thread_identity()
     getfenv().set_thread_identity(-1)
     local apidmp_class = md.ApiEquivalent
