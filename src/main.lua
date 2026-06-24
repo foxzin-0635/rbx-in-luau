@@ -68,6 +68,7 @@ local function githubRequire(path: string, nameReplacement: string?)
 end
 
 local function GetModule(path: string)
+    if config.SimulatedIdentityHacks.NotAccessibleSecurity.CanUse then return __modules[path:gsub("^%./", "")] end
     config.SimulatedIdentityHacks.NotAccessibleSecurity.CanUse = true
     local md = __modules[path:gsub("^%./", "")]
     if not md then error("Cannot get module '"..path.."' since it's non-existent.") end
