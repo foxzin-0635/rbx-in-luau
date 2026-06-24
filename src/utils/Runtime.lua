@@ -1,4 +1,4 @@
-local Security = githubRequire("src/utils/Security.lua")
+local Security = GetModule("Security")
 local Runtime = {}
 
 function Runtime:SetIdentityLevel(idl: number)

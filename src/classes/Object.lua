@@ -1,81 +1,59 @@
-local Runtime = githubRequire("src/utils/Runtime.lua")
-local Security = githubRequire("src/utils/Security.lua")
-local Object_metadata = {}
+local Runtime = GetModule("Runtime")
+local __api_info = apidump.Classes[1]
+
+local Object = {}
+local metatable = {
+  __metatable = "The metatable is locked",
+  __index = function(t,k)
+    if Runtime:IsEngineScript() then return rawget(Object, k) end
+    return rawget(t, k)
+  end,
+  __tostring = function(t)
+    return t.ClassName
+  end,
+  __newindex = function(t,k,v)
+    return nil
+  end
+}
 
 -- for typeof_hook(v)
 local function gettype()
-  return Object_metadata.ApiEquivalent.Name
+  return __api_info.Name
+end
+
+local function getApiInfo()
+  if Runtime:IsEngineScript() then
+    return __api_info
+  end
 end
 
 -- Mimic the behavior of the original :IsA(className)
 local function isA(self, className: string): boolean
-  local it = Object_metadata.inheritTree
-  local bt = string.split(it, ",")
-  
   local v = false
-  for i = 1, #bt do
-    if className == bt[i] then v = true break end
+  for i = 1, #self.__inheritIdxs do
+    if className == apidump.Classes[tonumber(bt[i])].Name then v = true break end
   end
   
   return v
+
+Object.ClassName = __api_info.Name
+Object.IsA = isA
+Object.__inheritIdxs = {1}
+Object.gettype = gettype
+Object.getApiInfo = getApiInfo
+
+function Object.constructor()
+  local self = setmetatable({}, metatable)
+  self.ClassName = __api_info.Name
+  self.IsA = isA
+  return self
 end
 
--- ReflectionMetadata like table.
-Object_metadata = {
-  ApiEquivalent = apidump.Classes[1],
-  --[[members = {
-    ClassName = {
-      ApiEquivalent = apidump.Classes[1].Members[1],
-      Value = "Object"
-    },
-    IsA = {
-      ApiEquivalent = apidump.Classes[1].Members[4],
-      Value = function(self, className: string)
-        return isA(self, className)
-      end
-    }
-  },]]
-  members = autoGenerateMembersWithValues({
-    {class = 1, member = 1, presetValue = "Object"}, -- ClassName
-    {class = 1, member = 4, presetValue = function(self, className: string) return isA(self, className) end} -- :IsA(className: string)
-  }),
-  gettype = gettype -- for typeof_hook(v)
-}
+function Object:destructor(self)
+  self.ClassName = nil
+  self.IsA = nil
+  setmetatable(self, nil)
+end
 
-local Object = setmetatable({}, {
-  __metatable = "The metatable is locked",
-  __index = function(t,k)
-    -- WARNING: executor level access!
-    if Runtime:IsEngineScript() then
-      if k ~= "members" then
-        return Object_metadata[k]
-      end
-    end
-    for mk,mt in pairs(Object_metadata.members) do
-      if mk == k then
-        return mt.Value
-      end
-    end
-  end,
-  __tostring = Object_metadata.ApiEquivalent.Name,
-  __newindex = function(t, k, v)
-    local mt = Object_metadata.members[k]
-    
-    if mt then
-      if table.find(mt.ApiEquivalent.Tags, "NotScriptable") then error("Attempt to index nil with "+typeof(v)) end
-      if table.find(mt.ApiEquivalent.Tags, "ReadOnly") then
-        error("Unable to assign property "..k..". Property is read only")
-      else
-        if type(v) == mt.ApiEquivalent.ValueType.Name then
-          mt.Value = v
-        else
-          error("Type '"..type(v).."' could not be converted into '"..mt.ValueType.."'")
-        end
-      end
-    end
-    
-    error("Attempt to index nil with "+typeof(v))
-  end
-})
-
+setmetatable(Object, metatable)
 return Object

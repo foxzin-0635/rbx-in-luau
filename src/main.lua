@@ -1,8 +1,16 @@
 -- Base hooks for the project.
+local rbx_api = {}
 local config
 local api_dump_latest
 local __modules = {}
+local __rbxClasses = {}
 local dtypeof = typeof
+
+-- Functions
+local RegisterModule
+local RegisterRbxClass
+local GetModule
+local GetRbxClass
 
 local function typeof_hook(v: any)
     if dtypeof(v) == "table" then
@@ -24,7 +32,7 @@ local function AutoGenerateMembersWithValues(membersTable: {{class: number, memb
     return res
 end
 
-local function githubRequire(path: string, nameReplacement: string?)
+local function githubRequire(path: string)
     local OWNER = "foxzin-0635"
     local REPO = "rbx-api-luau"
     local FILE_PATH = path
@@ -32,10 +40,6 @@ local function githubRequire(path: string, nameReplacement: string?)
     local cleanPath = path:gsub("^%./", "")
     if not cleanPath:find("%.lua$") then
         cleanPath = cleanPath .. ".lua"
-    end
-
-    if __modules[cleanPath] then
-        return __modules[cleanPath]
     end
 
     local url = "https://api.github.com/repos/" .. OWNER .. "/" .. REPO .. "/contents/" .. cleanPath
@@ -63,6 +67,8 @@ local function githubRequire(path: string, nameReplacement: string?)
         env.typeof = typeof_hook
         env.apidump = api_dump_latest
         env.autoGenerateMembersWithValues = AutoGenerateMembersWithValues
+        env.getModule = GetModule
+        env.getRbxClass = GetRbxClass
         
         if not cleanPath:match("src/config%.lua") then env.rbx_api_config = config end
         
@@ -74,28 +80,41 @@ local function githubRequire(path: string, nameReplacement: string?)
         
         if not res then error("Module '"..cleanPath.."' compiled successfully, but no result was given. Did you forgot to add a 'return' statement?") end
         
-        if nameReplacement then __modules[nameReplacement] = res else __modules[cleanPath] = res end
         return res
     else
         error("Failed to fetch file: Website gave code " .. tostring(response.StatusCode) .. ".")
     end
 end
 
-local function GetModule(path: string)
-    if config.CanImportAnyClass then return __modules[path:gsub("^%./", "")] end
-    local Runtime = githubRequire("src/utils/Runtime.lua")
+RegisterModule = function(path: string, name: string)
+    local module = githubRequire(path)
+    __modules[name] = module
+end
+RegisterRbxClass = function(path: string, name: string)
+    local class = githubRequire(path)
+    __rbxClasses[name] = class
+end
+
+GetModule = function(name: string)
+    local md = __modules[name]
+    if not md then error("Cannot get module '"..name.."' since it's non-existent.") end
+    return md
+end
+GetRbxClass = function(name: string)
+    if config.CanImportAnyClass then return __rbxClasses[name] end
+    local Runtime = GetModule("Runtime")
     
     if config.SimulatedIdentityHacks.NotAccessibleSecurity.CanUse then
         local cur_idl = Runtime:GetIdentityLevel()
         Runtime:SetIdentityLevelByContext("NotAccessibleSecurity")
         
-        local md = __modules[path:gsub("^%./", "")]
-        if not md then error("Cannot get module '"..path.."' since it's non-existent.") end
-        local apidmp_class = md.ApiEquivalent
+        local md = __rbxClasses[name]
+        if not md then error("Cannot get module '"..name.."' since it's non-existent.") end
+        local apidmp_class = md.getApiInfo()
         if apidmp_class then
             if table.find(apidmp_class.Tags, "NotReplicated") then
                 Runtime:SetIdentityLevel(cur_idl)
-                warn("Cannot get class '"..path.."' since it's an internal Roblox Class.")
+                warn("Cannot get class '"..name.."' since it's an internal Roblox Class.")
                 return nil
             end
         end
@@ -107,14 +126,14 @@ local function GetModule(path: string)
     config.SimulatedIdentityHacks.NotAccessibleSecurity.CanUse = true
     Runtime:SetIdentityLevelByContext("NotAccessibleSecurity")
     
-    local md = __modules[path:gsub("^%./", "")]
-    if not md then error("Cannot get module '"..path.."' since it's non-existent.") end
-    local apidmp_class = md.ApiEquivalent
+    local md = __rbxClasses[name]
+    if not md then error("Cannot get module '"..name.."' since it's non-existent.") end
+    local apidmp_class = md.getApiInfo()
     if apidmp_class then
         if table.find(apidmp_class.Tags, "NotReplicated") then
             config.SimulatedIdentityHacks.NotAccessibleSecurity.CanUse = false
             Runtime:SetIdentityLevel(cur_idl)
-            warn("Cannot get class '"..path.."' since it's an internal Roblox Class.")
+            warn("Cannot get class '"..name.."' since it's an internal Roblox Class.")
             return nil
         end
     end
@@ -127,15 +146,24 @@ config = githubRequire("src/config.lua", "rbx_api_config")
 api_dump_latest = game:GetService("HttpService"):JSONDecode(game:HttpGet("https://raw.githubusercontent.com/MaximumADHD/Roblox-Client-Tracker/refs/heads/roblox/API-Dump.json"))
 
 -- Classes
-githubRequire("src/classes/Object.lua", "rbx-classes/Object") -- Base class
+RegisterRbxClass("src/classes/Object.lua", "rbx-classes/Object") -- Base class
+RegisterRbxClass("src/classes/testClasses/Example.lua", "example/rbx-classes/Example") -- Example Class
+
+-- src/utils
+RegisterModule("src/utils/Runtime.lua", "Runtime")
+RegisterModule("src/utils/Security.lua", "Security")
+RegisterModule("src/utils/Range.lua", "Range")
 
 -- Subprojects
-githubRequire("projects_using_this/client-studio/src/main.lua", "client-studio") -- client-studio subproject
+RegisterModule("projects_using_this/client-studio/src/main.lua", "client-studio") -- client-studio subproject
 
--- Add helper method
-__modules.__api_dump = api_dump_latest
-__modules.config = config
-__modules.GetModule = GetModule
+-- Add stuff
+rbx_api.__modules = __modules
+rbx_api.__rbxClasses = __rbxClasses
+rbx_api.api_dump = api_dump_latest
+rbx_api.config = config
+rbx_api.GetModule = GetModule
+rbx_api.GetRbxClass = GetRbxClass
 
 -- Return the new modules table.
-return __modules
+return rbx_api
