@@ -28,7 +28,7 @@ local function getApiInfo()
 end
 
 -- Mimic the behavior of the original :IsA(className)
-local function isA(className: string): boolean
+local function isA(self, className: string): boolean
   local v = false
   
   for i = 1, #self.__inheritIdxs do
