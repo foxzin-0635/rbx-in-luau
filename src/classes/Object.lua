@@ -52,6 +52,15 @@ function Object.constructor()
   return self
 end
 
+-- for inheritance
+function Object.unprotectedconstructor()
+  if not Runtime:IsEngineScript() then error("Attempt to use a protected constructor for "..__api_info.Name) return end
+  local self = {}
+  self.ClassName = __api_info.Name
+  self.IsA = isA
+  return self
+end
+
 function Object:destructor(self)
   self.ClassName = nil
   self.IsA = nil

@@ -58,12 +58,21 @@ Example.gettype = gettype
 Example.getApiInfo = getApiInfo
 
 function Example.constructor()
-  local self = Object.constructor()
-  setmetatable(self, nil) -- Allows modifying members
+  local self = Object.unprotectedconstructor()
   
   self.PrintHello = function() print("Hello") end
   
-  setmetatable(self, metatable) -- Lock member modifications
+  setmetatable(self, metatable)
+  return self
+end
+
+-- for inheritance
+function Example.unprotectedconstructor()
+  if not Runtime:IsEngineScript() then error("Attempt to use a protected constructor for "..__api_info.Name) return end
+  local self = Object.unprotectedconstructor()
+  
+  self.PrintHello = function() print("Hello") end
+  
   return self
 end
 
