@@ -35,6 +35,7 @@ local function isA(self, className: string): boolean
   end
   
   return v
+end
 
 Object.ClassName = __api_info.Name
 Object.IsA = isA
