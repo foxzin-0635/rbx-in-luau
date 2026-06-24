@@ -8,5 +8,6 @@ return {
       CanUse = false,
       IdentityLevel = -1
     }
-  }
+  },
+  CanImportAnyClass = false
 }

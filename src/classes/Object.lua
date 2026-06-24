@@ -23,7 +23,7 @@ end
 -- ReflectionMetadata like table.
 Object_metadata = {
   ApiEquivalent = apidump.Classes[1],
-  members = {
+  --[[members = {
     ClassName = {
       ApiEquivalent = apidump.Classes[1].Members[1],
       Value = "Object"
@@ -34,7 +34,11 @@ Object_metadata = {
         return isA(self, className)
       end
     }
-  },
+  },]]
+  members = autoGenerateMembersWithValues({
+    {class = 1, member = 1, presetValue = "Object"}, -- ClassName
+    {class = 1, member = 4, presetValue = function(self, className: string) return isA(self, className) end} -- :IsA(className: string)
+  }),
   gettype = gettype -- for typeof_hook(v)
 }
 

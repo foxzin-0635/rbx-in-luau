@@ -11,6 +11,19 @@ local function typeof_hook(v: any)
     return dtypeof(v)
 end
 
+local function AutoGenerateMembersWithValues(membersTable: {{class: number, member: number, presetValue: any}})
+    local res = {}
+    for _, t in ipairs(membersTable) do
+        local class = __modules.__api_dump.Classes[t.class]
+        local member = class.Members[t.member]
+        res[member.Name] = {
+            ApiEquivalent = member,
+            Value = t.presetValue
+        }
+    end
+    return res
+end
+
 local function githubRequire(path: string, nameReplacement: string?)
     local OWNER = "foxzin-0635"
     local REPO = "rbx-api-luau"
@@ -49,6 +62,7 @@ local function githubRequire(path: string, nameReplacement: string?)
         env.githubRequire = githubRequire
         env.typeof = typeof_hook
         env.apidump = api_dump_latest
+        env.autoGenerateMembersWithValues = AutoGenerateMembersWithValues
         
         if not cleanPath:match("src/config%.lua") then env.rbx_api_config = config end
         
@@ -68,6 +82,7 @@ local function githubRequire(path: string, nameReplacement: string?)
 end
 
 local function GetModule(path: string)
+    if config.CanImportAnyClass then return __modules[path:gsub("^%./", "")] end
     local Runtime = githubRequire("src/utils/Runtime.lua")
     
     if config.SimulatedIdentityHacks.NotAccessibleSecurity.CanUse then
