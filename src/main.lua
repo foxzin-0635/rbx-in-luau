@@ -140,8 +140,7 @@ GetRbxClass = function(name: string)
         if apidmp_class then
             if table.find(apidmp_class.Tags, "NotReplicated") then
                 Runtime:SetIdentityLevel(cur_idl)
-                warn("Cannot get class '"..name.."' since it's an internal Roblox Class.")
-                return nil
+                error("Cannot get class '"..name.."' since it's an internal Roblox Class.")
             end
         end
         Runtime:SetIdentityLevel(cur_idl)
@@ -159,8 +158,7 @@ GetRbxClass = function(name: string)
         if table.find(apidmp_class.Tags, "NotReplicated") then
             config.SimulatedIdentityHacks.NotAccessibleSecurity.CanUse = false
             Runtime:SetIdentityLevel(cur_idl)
-            warn("Cannot get class '"..name.."' since it's an internal Roblox Class.")
-            return nil
+            error("Cannot get class '"..name.."' since it's an internal Roblox Class.")
         end
     end
     config.SimulatedIdentityHacks.NotAccessibleSecurity.CanUse = false
