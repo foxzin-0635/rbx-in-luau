@@ -178,8 +178,10 @@ RegisterModule("src/utils/Runtime.lua", "Runtime")
 RegisterModule("src/utils/Range.lua", "Range")
 
 --> Roblox classes from "src/classes"
+config.CanImportAnyClass = true -- Tweak before importing
 RegisterRbxClass("src/classes/Object.lua", "rbx-classes/Object") -- Base class
 RegisterRbxClass("src/classes/testClasses/Example.lua", "example/rbx-classes/Example") -- Example Class
+config.CanImportAnyClass = false -- Disable Tweak
 
 --> Subprojects using this project
 RegisterModule("projects_using_this/client-studio/src/main.lua", "client-studio") -- client-studio subproject
