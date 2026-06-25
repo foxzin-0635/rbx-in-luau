@@ -6,7 +6,7 @@ function Runtime:SetIdentityLevel(idl: number)
 end
 
 function Runtime:GetIdentityLevel()
-  return thread_identity
+  return thread_identity.Value
 end
 
 function Runtime:SetIdentityLevelByContext(context: string)
