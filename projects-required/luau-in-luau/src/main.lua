@@ -23,11 +23,11 @@ local function getNewContentsFromSpecifiedModule(name: string)
     assert(module ~= nil, "Module is non-existent.")
     local contents = {}
     
-    if dtypeof(module) == table then
+    if dtypeof(module) == "table" then
         if module.NewEnv and module.NewEnvItemsNames then
             contents.envContents = {}
-            for k,v in pairs(module.NewEnvItemsNames) do
-                contents.envContents[k] = module.NewEnv[k]
+            for _,v in pairs(module.NewEnvItemsNames) do
+                contents.envContents[v] = module.NewEnv[v]
             end
         end
     end
@@ -168,7 +168,7 @@ conf = githubRequire("src/conf.lua")
 --> Modules
 RegisterModule("src/Common/Common.lua", "Common/Common.lua") -- [TEST] Common.h -> Common.lua
 
-l_in_l.conf =
+l_in_l.conf = conf
 l_in_l.GetModule = GetModule
 
 return l_in_l
