@@ -7,14 +7,14 @@ local conf
 local RegisterModule
 local GetModule
 
-local dtypeof = typeof -- typeof backup
+local _dtypeof = dtypeof -- typeof backup
 
 -- Custom typeof(v) for printing custom table type names.
 local function typeof_hook(v: any)
-    if dtypeof(v) == "table" then
-        if v.type then return v.type else return dtypeof(v) end
+    if _dtypeof(v) == "table" then
+        if v.type then return v.type else return _dtypeof(v) end
     end
-    return dtypeof(v)
+    return _dtypeof(v)
 end
 
 local function getNewContentsFromSpecifiedModule(name: string)
@@ -105,6 +105,7 @@ local function githubRequire(path: string)
         -- Add global variables/functions to module's environment
         env.githubRequire = githubRequire
         env.typeof = typeof_hook
+        env.dtypeof = _dtypeof
         
         -- Not sure why i did this. :P
         if not cleanPath:match("src/conf%.lua") then

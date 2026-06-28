@@ -80,6 +80,7 @@ local function githubRequire(path: string)
         -- Add global variables/functions to module's environment
         env.githubRequire = githubRequire
         env.typeof = typeof_hook
+        env.dtypeof = dtypeof
         env.apidump = api_dump_latest
         env.autoGenerateMembersWithValues = AutoGenerateMembersWithValues
         env.getModule = GetModule
