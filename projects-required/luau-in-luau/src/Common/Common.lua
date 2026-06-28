@@ -14,7 +14,7 @@ export type FValue<T> = {
   name: string,
   dynamic: boolean,
   value: T,
-  next: FValue<any>?
+  next: FValue<any>?,
   version: number
 }
 
