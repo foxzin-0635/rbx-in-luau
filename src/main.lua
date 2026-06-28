@@ -7,6 +7,8 @@ local __modules = {} -- holds general classes
 local __rbxClasses = {} -- holds Roblox classes
 local dtypeof = typeof -- typeof backup
 
+local __token = "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" -- use this instead of rewriting the same token across githubRequire functions.
+
 local __idl = Instance.new("NumberValue")
 __idl.Value = 2
 
@@ -46,9 +48,9 @@ local function githubRequire(path: string)
     local OWNER = "foxzin-0635" -- My GitHub name
     local REPO = "rbx-api-luau" -- The current repository
     local FILE_PATH = path -- The path you've selected to load
-    local TOKEN = "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" -- The token (which has read-only access)
+    local TOKEN = __token -- The token (which has read-only access)
     local cleanPath = path:gsub("^%./", "") -- Cleans the given path for any bad characters (currently "./")
-    if not cleanPath:find("%.lua$") then
+    if not cleanPath:find("%.lua$") then    
         cleanPath = cleanPath .. ".lua" -- Fix if no extension was given
     end
 
@@ -83,6 +85,7 @@ local function githubRequire(path: string)
         env.getModule = GetModule
         env.getRbxClass = GetRbxClass
         env.thread_identity = __idl
+        env.__token = __token -- necessary
         
         -- Not sure why i did this. :P
         if not cleanPath:match("src/config%.lua") then env.rbx_api_config = config end
@@ -170,9 +173,12 @@ config.CanImportAnyClass = false -- Disable Tweak
 --> Subprojects using this project
 RegisterModule("projects_using_this/client-studio/src/main.lua", "client-studio") -- client-studio subproject
 
+--> Required projects for the module
+RegisterModule("projects-required/luau-in-luau/src/main.lua", "luau-in-luau") -- luau-in-luau project (Simulate original Luau VM)
+
 --> Add stuff to the main module table
-rbx_api.__modules = __modules
-rbx_api.__rbxClasses = __rbxClasses
+-- rbx_api.__modules = __modules
+-- rbx_api.__rbxClasses = __rbxClasses
 rbx_api.api_dump = api_dump_latest
 rbx_api.config = config
 rbx_api.GetModule = GetModule
