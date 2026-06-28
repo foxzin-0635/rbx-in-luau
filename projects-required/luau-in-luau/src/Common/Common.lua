@@ -72,7 +72,7 @@ local FValueClass: FValueModule = (function()
     end
   }
   
-  module.list = nil :: FValue<any>?
+  module.list = {} :: FValue<any>?
   module.type = "FValue"
   module.version = 0
   
