@@ -92,7 +92,7 @@ local FValueClass: FValueModule = (function()
   function module.dumpFlags()
     local current = module.list
     print("--- Current FValues Linked List ---")
-    while current and current.name and current.value do
+    while current ~= nil and current.name ~= nil and current.value ~= nil do
         print(string.format("Flag: %s | Value: %s", current.name, tostring(current.value)))
         current = current.next -- Step to the next node in the chain
     end
