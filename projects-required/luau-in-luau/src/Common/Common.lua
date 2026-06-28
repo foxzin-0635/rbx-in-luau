@@ -50,7 +50,7 @@ local function assertCallHandler(expr: string, file: string, line: number, func:
 end
 
 local LUAU_ASSERT
-if not runVars.NDEBUG and runVars.LUAU_ENABLE_ASSERT then
+if not NDEBUG and LUAU_ENABLE_ASSERT then
   LUAU_ASSERT = function(expr: any, message: string, file: string, line: number, func: string)
     if not expr then
       assertCallHandler(message, file, line, func)
