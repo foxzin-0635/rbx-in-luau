@@ -18,6 +18,20 @@ export type FValue<T> = {
   version: number
 }
 
+export type FValueVersionSetter = {}
+
+type FValueModule = {
+  new: <T>(name: string, def: T, dynamic: boolean) -> FValue<T>,
+  list: FValue<any>?,
+  version: number,
+  type: string
+}
+
+type FValueVersionSetterModule = {
+  new: <T>(name: string, def: T, dynamic: boolean) -> FValueVersionSetter,
+  type: string
+}
+
 local activeHandler: AssertHandler? = nil
 
 local function assertHandler(newHandler: AssertHandler?): AssertHandler?
@@ -48,7 +62,7 @@ else
   LUAU_ASSERT = function(...) end
 end
 
-local FValueClass = (function()
+local FValueClass: FValueModule = (function()
   local module = {}
   local metatable = {
     __metatable = "The metatable is locked",
@@ -58,7 +72,7 @@ local FValueClass = (function()
     end
   }
   
-  module.list = {} :: FValue<any>?
+  module.list = nil :: FValue<any>?
   module.type = "FValue"
   module.version = 0
   
@@ -79,7 +93,7 @@ local FValueClass = (function()
   return module
 end)()
 
-local FValueVersionSetterClass = (function()
+local FValueVersionSetterClass: FValueVersionSetterModule = (function()
   local module = {}
   local metatable = {
     __metatable = "The metatable is locked",
@@ -132,7 +146,7 @@ local function LUAU_FASTFLAGVARIABLE(flag: string): FValue<boolean>
 end
 
 local LUAU_FASTINT: FValue<number>
-local function LUAU_FASTINTVARIABLE(flag: string, def: number) FValue<number>
+local function LUAU_FASTINTVARIABLE(flag: string, def: number): FValue<number>
   local fflag = FValueClass.new<number>(flag, def, false)
   FFlag[flag] = fflag
   return fflag
