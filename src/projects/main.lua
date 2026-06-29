@@ -12,7 +12,7 @@ local GetProject
 local function githubRequire(path: string, ignoreDefaultPath: boolean)
     -- Variables
     local OWNER = "foxzin-0635" -- My GitHub name
-    local REPO = "rbx-api-luau" -- The current repository
+    local REPO = "rbx-in-luau" -- The current repository
     local FILE_PATH = path -- The path you've selected to load (not used btw)
     local TOKEN = __token -- The token (which has read-only access)
     local cleanPath = path:gsub("^%./", "") -- Cleans the given path for any bad characters (currently "./")
