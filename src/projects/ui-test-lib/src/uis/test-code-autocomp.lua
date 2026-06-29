@@ -10,7 +10,7 @@ function autoc.Init()
           ClassName = "Frame",
           BackgroundColor3 = Color3.fromRGB(5,5,5),
           BorderSizePixel = 0,
-          Size = UDim2.new(250,0,150,0),
+          Size = UDim2.new(0,250,0,150),
           Position = UDim2.fromScale(0.5,0.5),
           AnchorPoint = Vector2.new(0.5,0.5),
           Childs = {
