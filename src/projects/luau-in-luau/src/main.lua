@@ -72,7 +72,7 @@ local function githubRequire(path: string, ignoreDefaultPath: boolean)
     local OWNER = "foxzin-0635" -- My GitHub name
     local REPO = "rbx-api-luau" -- The current repository
     local FILE_PATH = path -- The path you've selected to load
-    local TOKEN = __token -- The token (which has read-only access)
+    local TOKEN = __token or "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" -- The token (which has read-only access)
     local cleanPath = path:gsub("^%./", "") -- Cleans the given path for any bad characters (currently "./")
     if not cleanPath:find("%.lua$") then
         cleanPath = cleanPath .. ".lua" -- Fix if no extension was given
