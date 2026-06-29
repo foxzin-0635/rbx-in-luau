@@ -37,10 +37,6 @@ local function githubRequire(path: string, ignoreDefaultPath: boolean)
         Headers = headers
     })
     
-    if not cleanPath:match("src/config%.lua") and config.debugOutputRequirePaths then
-        print(cleanPath)
-    end
-    
     -- Good code :>
     if response.StatusCode == 200 then
         -- Load the module
