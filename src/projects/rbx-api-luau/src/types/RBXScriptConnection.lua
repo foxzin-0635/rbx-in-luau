@@ -51,7 +51,7 @@ local metatable = {
 RBXScriptConnection.gettype = gettype
 RBXScriptConnection.getApiInfo = getApiInfo
 
-function RBXScriptConnection.new(func: (...: any) -> any)
+function RBXScriptConnection.new(func: (...any) -> any)
   local self = {}
   
   self.func = func

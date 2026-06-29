@@ -116,7 +116,7 @@ function RBXScriptSignal.new()
   local __yieldingThreads = {}
   local __connections = {}
   
-  self.Connect = function(self, func: (...: any) -> any) 
+  self.Connect = function(self, func: (...any) -> any) 
     local connection = RBXScriptConnection.new(func)
     
     table.insert(__connections, {
@@ -125,7 +125,7 @@ function RBXScriptSignal.new()
     })
   end
   
-  self.Once = function(self, func: (...: any) -> any)
+  self.Once = function(self, func: (...any) -> any)
     local connection = RBXScriptConnection.new(func)
     
     table.insert(__connections, {
@@ -142,7 +142,7 @@ function RBXScriptSignal.new()
     return coroutine.yield()
   end
   
-  self.Fire = function(self, ...: any)
+  self.Fire = function(self, ...any)
     for i, t in ipairs(__connections) do
       if t.connection.Disconnected then
         table.remove(__connections, i)
