@@ -10,7 +10,7 @@ function CR.Create(instanceContents: InstanceProps, inst: Instance?, initialPare
     if initialParent then i.Parent = initialParent end
     for k,v in pairs(t) do
       if k == "ClassName" then continue end
-      if k == "Childs" then CR.Create(v, i) end
+      if k == "Childs" then CR.Create(v, i) continue end
       if k == "Parent" then continue end
       i[k] = v
     end
