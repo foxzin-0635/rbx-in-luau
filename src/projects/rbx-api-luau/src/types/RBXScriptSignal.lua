@@ -22,6 +22,55 @@ local __api_info = {
       },
       Security = "None",
       ThreadSafety = "Unsafe"
+    },
+    {
+      Category = "Function",
+      Name = "Once",
+      Parameters = {
+        {
+          Name = "func",
+          Type = {
+            Category = "DataType",
+            Name = "Function"
+          }
+        }
+      },
+      ReturnType = {
+        Category = "DataType",
+        Name = "RBXScriptConnection"
+      },
+      Security = "None",
+      ThreadSafety = "Unsafe"
+    },
+    {
+      Category = "Function",
+      Name = "Wait",
+      Parameters = {},
+      ReturnType = {
+        Category = "Group",
+        Name = "Variant"
+      },
+      Security = "None",
+      ThreadSafety = "Unsafe"
+    },
+    {
+      Category = "Function",
+      Name = "Fire",
+      Parameters = {
+        {
+          Name = "args",
+          Type = {
+            Category = "Group",
+            Name = "Variant"
+          }
+        }
+      },
+      ReturnType = {
+        Category = "Primitive",
+        Name = "null"
+      },
+      Security = "None",
+      ThreadSafety = "Unsafe"
     }
   },
   Category = "DataType",
@@ -64,26 +113,61 @@ RBXScriptSignal.getApiInfo = getApiInfo
 function RBXScriptSignal.new()
   local self = {}
   
+  local __yieldingThreads = {}
   local __connections = {}
   
-  self.Connect = function(self, func: (...any) -> ()) 
+  self.Connect = function(self, func: (...: any) -> any) 
     local connection = RBXScriptConnection.new(func)
     
-    table.insert(__connections, connection)
+    table.insert(__connections, {
+      type = "default",
+      connection = connection
+    })
   end
   
-  self.Fire = function(self)
-    for i, c in ipairs(__connections) do
-      if c.Disconnected then
+  self.Once = function(self, func: (...: any) -> any)
+    local connection = RBXScriptConnection.new(func)
+    
+    table.insert(__connections, {
+      type = "once",
+      connection = connection
+    })
+  end
+  
+  self.Wait = function(self)
+    local thread = coroutine.running()
+
+    table.insert(__yieldingThreads, thread)
+    
+    return coroutine.yield()
+  end
+  
+  self.Fire = function(self, ...: any)
+    for i, t in ipairs(__connections) do
+      if t.connection.Disconnected then
         table.remove(__connections, i)
       end
-    end 
-    for _, c in ipairs(__connections) do
-      c.func()
+      
+      local v: any = t.connection.func(...)
+      
+      if t.type == "once" then
+        t.connection:Disconnect()
+        table.remove(__connections, i)
+      end
+      
+      if #__yieldingThreads > 0 then
+      for _i, _t in ipairs(__yieldingThreads) do
+        coroutine.resume(_t, v)
+        table.remove(__yieldingThreads, _i)
+      end
+    end
     end
   end
   
   self.__clearConnections = function(self)
+    for _, t in ipairs(__connections) do
+      t.connection:Disconnect()
+    end
     table.clear(__connections)
   end
   
