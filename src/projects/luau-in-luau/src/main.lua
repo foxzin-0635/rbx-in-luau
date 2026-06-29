@@ -7,7 +7,7 @@ local conf
 local RegisterModule
 local GetModule
 
-local _dtypeof = dtypeof -- typeof backup
+local _dtypeof = dtypeof or typeof -- typeof backup
 
 -- Custom typeof(v) for printing custom table type names.
 local function typeof_hook(v: any)
