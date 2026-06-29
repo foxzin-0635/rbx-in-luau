@@ -43,7 +43,7 @@ local function AutoGenerateMembersWithValues(membersTable: {{class: number, memb
 end
 
 -- Require modules from PRIVATE GitHub repository, you don't need it for an public repository though.
-local function githubRequire(path: string)
+local function githubRequire(path: string, ignoreDefaultPath: boolean)
     -- Variables
     local OWNER = "foxzin-0635" -- My GitHub name
     local REPO = "rbx-api-luau" -- The current repository
@@ -53,13 +53,16 @@ local function githubRequire(path: string)
     if not cleanPath:find("%.lua$") then    
         cleanPath = cleanPath .. ".lua" -- Fix if no extension was given
     end
+    if not ignoreDefaultPath then
+        cleanPath = "src/projects/rbx-api-luau/"..cleanPath
+    end
 
     -- Settings before requesting
     local url = "https://api.github.com/repos/" .. OWNER .. "/" .. REPO .. "/contents/" .. cleanPath
     local headers = {
         ["Authorization"] = "token " .. TOKEN,
         ["Accept"] = "application/vnd.github.v3.raw", -- Tells GitHub to return the raw file, not JSON
-        ["User-Agent"] = "Roblox API - Pure Luau"
+        ["User-Agent"] = "Roblox in Luau - Roblox API - Pure Luau"
     }
 
     -- Request for the raw file
@@ -117,13 +120,13 @@ local function githubRequire(path: string)
 end
 
 -- Load other modules for the project's "__modules" table. (AKA Old "rbx_api" main table)
-RegisterModule = function(path: string, name: string)
-    local module = githubRequire(path)
+RegisterModule = function(path: string, name: string, ignoreDefaultPath: boolean)
+    local module = githubRequire(path, ignoreDefaultPath)
     __modules[name] = module
 end
 -- Load Roblox class modules for the project's "__rbxClasses" table.
-RegisterRbxClass = function(path: string, name: string)
-    local class = githubRequire(path)
+RegisterRbxClass = function(path: string, name: string, ignoreDefaultPath: boolean)
+    local class = githubRequire(path, ignoreDefaultPath)
     __rbxClasses[name] = class
 end
 
@@ -156,26 +159,26 @@ end
 --                   [-CONFIGURATION-]                   --
 
 --> Necessary files
-config = githubRequire("src/config.lua", "rbx_api_config")
+config = githubRequire("src/config.lua", false)
 -- Reverted to original
 api_dump_latest = game:GetService("HttpService"):JSONDecode(game:HttpGet("https://raw.githubusercontent.com/MaximumADHD/Roblox-Client-Tracker/refs/heads/roblox/API-Dump.json")) -- Thanks to MaximumADHD for "API-Dump.json" <3
 
 --> Modules from "src/utils"
-RegisterModule("src/utils/Security.lua", "Security")
-RegisterModule("src/utils/Runtime.lua", "Runtime")
-RegisterModule("src/utils/Range.lua", "Range")
+RegisterModule("src/utils/Security.lua", "Security", false)
+RegisterModule("src/utils/Runtime.lua", "Runtime", false)
+RegisterModule("src/utils/Range.lua", "Range", false)
 
 --> Roblox classes from "src/classes"
 config.CanImportAnyClass = true -- Tweak before importing
-RegisterRbxClass("src/classes/Object.lua", "rbx-classes/Object") -- Base class
-RegisterRbxClass("src/classes/testClasses/Example.lua", "example/rbx-classes/Example") -- Example Class
+RegisterRbxClass("src/classes/Object.lua", "rbx-classes/Object", false) -- Base class
+RegisterRbxClass("src/classes/testClasses/Example.lua", "example/rbx-classes/Example", false) -- Example Class
 config.CanImportAnyClass = false -- Disable Tweak
 
 --> Subprojects using this project
-RegisterModule("projects_using_this/client-studio/src/main.lua", "client-studio") -- client-studio subproject
+RegisterModule("src/projects/client-studio/src/main.lua", "client-studio", true) -- client-studio subproject
 
 --> Required projects for the module
-RegisterModule("projects-required/luau-in-luau/src/main.lua", "luau-in-luau") -- luau-in-luau project (Simulate original Luau VM)
+RegisterModule("src/projects/luau-in-luau/src/main.lua", "luau-in-luau", true) -- luau-in-luau project (Simulate original Luau VM)
 
 --> Add stuff to the main module table
 -- rbx_api.__modules = __modules

@@ -67,16 +67,18 @@ local function pcallForNewContents()
 end
 
 -- Require modules from PRIVATE GitHub repository, you don't need it for an public repository though.
-local function githubRequire(path: string)
+local function githubRequire(path: string, ignoreDefaultPath: boolean)
     -- Variables
     local OWNER = "foxzin-0635" -- My GitHub name
     local REPO = "rbx-api-luau" -- The current repository
     local FILE_PATH = path -- The path you've selected to load
     local TOKEN = __token -- The token (which has read-only access)
     local cleanPath = path:gsub("^%./", "") -- Cleans the given path for any bad characters (currently "./")
-    cleanPath = "projects-required/luau-in-luau/"..cleanPath:gsub("^projects%-required/luau%-in%-luau/", "") -- bruh
     if not cleanPath:find("%.lua$") then
         cleanPath = cleanPath .. ".lua" -- Fix if no extension was given
+    end
+    if not ignoreDefaultPath then
+        cleanPath = "src/projects/luau-in-luau/"..cleanPath
     end
 
     -- Settings before requesting
@@ -84,7 +86,7 @@ local function githubRequire(path: string)
     local headers = {
         ["Authorization"] = "token " .. TOKEN,
         ["Accept"] = "application/vnd.github.v3.raw", -- Tells GitHub to return the raw file, not JSON
-        ["User-Agent"] = "Roblox API - Pure Luau - Luau in Luau"
+        ["User-Agent"] = "Roblox in Luau - Luau in Luau"
     }
 
     -- Request for the raw file
