@@ -106,6 +106,7 @@ local function githubRequire(path: string)
         env.githubRequire = githubRequire
         env.typeof = typeof_hook
         env.dtypeof = _dtypeof
+        env.getModule = GetModule
         
         -- Not sure why i did this. :P
         if not cleanPath:match("src/conf%.lua") then
@@ -167,7 +168,9 @@ end
 conf = githubRequire("src/conf.lua")
 
 --> Modules
-RegisterModule("src/Common/Common.lua", "Common/Common.lua") -- [TEST] Common.h -> Common.lua
+-- Common folder
+RegisterModule("src/Common/Common.lua", "Common/Common") -- Common.h -> Common.lua
+RegisterModule("src/Common/InsertionOrderedMap.lua", "Common/InsertionOrderedMap") -- InsertionOrderedMap.h -> InsertionOrderedMap.lua
 
 l_in_l.conf = conf
 l_in_l.GetModule = GetModule

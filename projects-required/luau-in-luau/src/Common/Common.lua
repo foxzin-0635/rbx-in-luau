@@ -108,7 +108,7 @@ local FValueVersionSetterClass: FValueVersionSetterModule = (function()
     __metatable = "The metatable is locked",
     __index = module,
     __tostring = function(t)
-      return "FValue"
+      return "FValueVersionSetter"
     end
   }
   
@@ -134,7 +134,7 @@ local FValueVersionSetterClass: FValueVersionSetterModule = (function()
       flag = flag.next
     end
     
-    LUAU_ASSERT(found, "LUAU_FLAGVERSION must appear after the flag definition in the same source file", "Common/Common.lua", 123, "FValueVersionSetter.new");
+    LUAU_ASSERT(found, "LUAU_FLAGVERSION must appear after the flag definition in the same source file", "Common/Common.lua", 123, "FValueVersionSetterClass.new");
     
     setmetatable(self, createInstanceMetatable())
     return self
