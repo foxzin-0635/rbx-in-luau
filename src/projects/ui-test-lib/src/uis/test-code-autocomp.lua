@@ -59,7 +59,19 @@ function autoc.Init()
                   Font = Enum.Font.Code,
                   PlaceholderText = "-- Code here",
                   Text = "",
-                  TextSize = 10
+                  TextSize = 10,
+                  TextXAlignment = Enum.TextXAlignment.Left,
+                  TextYAlignment = Enum.TextYAlignment.Top,
+                  
+                  Childs = {
+                    {
+                      ClassName = "UIPadding",
+                      PaddingLeft = UDim.new(0,3),
+                      PaddingTop = UDim.new(0,3),
+                      PaddingRight = UDim.new(0,3),
+                      PaddingBottom = UDim.new(0,3)
+                    }
+                  }
                 }
               }
             }
