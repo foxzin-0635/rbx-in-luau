@@ -145,9 +145,19 @@ GetRbxClass = function(name: string)
     if not md then error("Cannot get class '"..name.."' since it's non-existent.") end
     local apidmp_class = md.getApiInfo()
     if apidmp_class then
-        if table.find(apidmp_class.Tags, "NotReplicated") then
-            Runtime:SetIdentityLevelByContext("None")
-            error("Cannot get class '"..name.."' since it's an internal Roblox Class.")
+        if apidmp_class.Tags ~= nil then
+            if table.find(apidmp_class.Tags, "NotReplicated") then
+                Runtime:SetIdentityLevelByContext("None")
+                error("Cannot get class '"..name.."' since it's an internal Roblox Class.")
+            else
+                Runtime:SetIdentityLevelByContext("None")
+                return md
+            end
+        else
+            if apidmp_class.Category and apidmp_class.Category == "DataType" then
+                Runtime:SetIdentityLevelByContext("None")
+                return md
+            end
         end
     end
     Runtime:SetIdentityLevelByContext("None")

@@ -1,6 +1,6 @@
 local Runtime = getModule("Runtime")
 
-local RBXScriptConnection = getModule("RBXScriptConnection")
+local RBXScriptConnection = getRbxClass("RBXScriptConnection")
 
 local __api_info = {
   Members = {
