@@ -70,7 +70,9 @@ local function githubRequire(path: string, ignoreDefaultPath: boolean)
         Headers = headers
     })
     
-    print(cleanPath)
+    if config.debugOutputRequirePaths then
+        print(cleanPath)
+    end
     
     -- Good code :>
     if response.StatusCode == 200 then
@@ -179,8 +181,8 @@ RegisterModule("src/utils/Runtime.lua", "Runtime", false)
 RegisterModule("src/utils/Range.lua", "Range", false)
 
 --> Data Types
-RegisterRbxClass("src/types/RBXScriptSignal.lua", "data-types/RBXScriptSignal", false) -- RBXScriptSignal
 RegisterRbxClass("src/types/RBXScriptConnection.lua", "data-types/RBXScriptConnection", false) -- RBXScriptConnection
+RegisterRbxClass("src/types/RBXScriptSignal.lua", "data-types/RBXScriptSignal", false) -- RBXScriptSignal
 
 --> Roblox classes from "src/classes"
 config.CanImportAnyClass = true -- Tweak before importing

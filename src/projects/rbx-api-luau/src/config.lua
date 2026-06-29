@@ -12,5 +12,7 @@ return {
     }
   },
   -- Bypass the errors from getting an normally inaccessible class
-  CanImportAnyClass = false
+  CanImportAnyClass = false,
+  -- Prints the current path that githubRequire is working on.
+  debugOutputRequirePaths = true
 }
