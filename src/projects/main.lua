@@ -84,7 +84,7 @@ end
 GetProject = function(name: string)
     local project = __projects[name]
     if not project then error("Cannot get project '"..name.."' since it's non-existent.") end
-    return poject
+    return project
 end
 
 --                   [-CONFIGURATION-]                   --
