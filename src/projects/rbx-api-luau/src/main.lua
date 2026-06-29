@@ -5,9 +5,7 @@ local config -- Module config
 local api_dump_latest -- a luau table version of MaximumADHD's "API-Dump.json"
 local __modules = {} -- holds general classes
 local __rbxClasses = {} -- holds Roblox classes
-local dtypeof = typeof -- typeof backup
-
-local __token = "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" -- use this instead of rewriting the same token across githubRequire functions.
+local _dtypeof = dtypeof or typeof -- typeof backup
 
 local __idl = Instance.new("NumberValue")
 __idl.Value = 2
@@ -21,11 +19,11 @@ local GetRbxClass
 
 -- Custom typeof(v) for printing custom table type names.
 local function typeof_hook(v: any)
-    if dtypeof(v) == "table" then
+    if _dtypeof(v) == "table" then
         -- NOTE: gettype() is only accessible with elevated context ("NotAccessibleSecurity", which is simulated in the module)
-        if v.gettype then return v.gettype() else return dtypeof(v) end
+        if v.gettype then return v.gettype() else return _dtypeof(v) end
     end
-    return dtypeof(v)
+    return _dtypeof(v)
 end
 
 -- [DEPRECATED] A function to generate a usable version of the member table of an class.
@@ -47,7 +45,7 @@ local function githubRequire(path: string, ignoreDefaultPath: boolean)
     -- Variables
     local OWNER = "foxzin-0635" -- My GitHub name
     local REPO = "rbx-api-luau" -- The current repository
-    local FILE_PATH = path -- The path you've selected to load
+    local FILE_PATH = path -- The path you've selected to load (not used btw)
     local TOKEN = __token -- The token (which has read-only access)
     local cleanPath = path:gsub("^%./", "") -- Cleans the given path for any bad characters (currently "./")
     if not cleanPath:find("%.lua$") then    
