@@ -52,7 +52,7 @@ function autoc.Init()
                   ClearTextOnFocus = false,
                   BorderSizePixel = 0,
                   Size = UDim2.new(1,0,1,0),
-                  Multiline = true,
+                  MultiLine = true,
                   BackgroundTransparency = 1,
                   
                   TextColor = Color3.fromRGB(255,255,255),
