@@ -66,7 +66,7 @@ function RBXScriptSignal.new()
   
   local __connections = {}
   
-  self.Connect = function(self, func: (...) -> any) 
+  self.Connect = function(self, func: (...) -> ()) 
     local connection = RBXScriptConnection.new(func)
     
     table.insert(__connections, connection)

@@ -70,6 +70,8 @@ local function githubRequire(path: string, ignoreDefaultPath: boolean)
         Headers = headers
     })
     
+    print(cleanPath)
+    
     -- Good code :>
     if response.StatusCode == 200 then
         -- Load the module
