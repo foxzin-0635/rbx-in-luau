@@ -95,7 +95,8 @@ function autoc.Init()
       BorderSizePixel = 0,
       Size = UDim2.new(0,150,0,15),
       AnchorPoint = Vector2.new(0,0),
-      Name = "AutoCBox"
+      Name = "AutoCBox",
+      Visible = false
     }
   }, nil, text)
 
@@ -129,6 +130,7 @@ function autoc.Init()
   end
 
   text:GetPropertyChangedSignal("CursorPosition"):Connect(function()
+  	if text.CursorPosition == -1 then rect.Visible = false else rect.Visible = true end
   	calcLine()
   	
   	local fullText = text.Text
@@ -150,7 +152,7 @@ function autoc.Init()
   	local lineHeight = text.TextSize * text.LineHeight
   	local posY = lineHeight * (curLine - 1)
   	
-  	rect.Position = UDim2.fromOffset(textBounds.X-5, posY+5)
+  	rect.Position = UDim2.fromOffset(textBounds.X-10, posY+20)
   end)
   
   
