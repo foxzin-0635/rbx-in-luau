@@ -107,19 +107,18 @@ function autoc.Init()
     
     local i = 1
     local endI = 1
-    local txt = ""
     local _txtc = text.Text
     
     local si, ei = 0, 0
     
     while endI < #text.Text do
-      task.wait()
+      task.wait(1)
       local _si, _ei = _txtc:find("[^\n]*")
       si += _si
       ei += _ei
-      _txtc = _txtc:sub(ei+1, #text.Text-ei)
-      txt = text.Text:sub(si, ei)
+      _txtc = _txtc:sub(_ei, #text.Text-_ei)
       
+      print(cur, si, _si, ei, _ei, _txtc)
       if cur >= si and cur <= ei then
         curLine = i
         curLineSize = ei-si
