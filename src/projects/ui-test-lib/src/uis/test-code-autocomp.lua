@@ -102,8 +102,24 @@ function autoc.Init()
   local curLine = 0
   local curLineSize = 0
 
-  local function calcLine(endI, i)
+  local function calcLine()
     local cur = text.CursorPosition
+    
+    local i = 0
+    local endI = 0
+    
+    while endI < #text.Text do
+      task.wait()
+      local startIdx, endIdx = text.Text:find("[^\n]*", endI)
+      
+      if cur >= startIdx and cur <= endIdx then
+        curLine = i
+        curLineSize = endIdx-startIdx
+      else
+        i += 1
+        endI = endIdx+1
+      end
+    end
     
     local startIdx, endIdx = text.Text:find("[^\n]*", endI)
     
@@ -112,7 +128,6 @@ function autoc.Init()
         curLine = i
         curLineSize = endIdx-startIdx
       else
-        print(#text.Text, endIdx, endI, i)
         if #text.Text == endIdx then return end
         i += 1
         calcLine(endIdx+1, i)
@@ -130,7 +145,7 @@ function autoc.Init()
     tbp.Text = t
     tbp.Font = text.FontFace
     local tbs = s:GetTextBoundsAsync(tbp)
-    calcLine(0,0)
+    calcLine()
     
     rect.Position = UDim2.fromOffset(
       tbs.X * curLineSize,
