@@ -116,7 +116,7 @@ function autoc.Init()
       _txtc = _txtc:sub(ei+1, #text.Text-ei)
       txt = text.Text:sub(si, ei)
       
-      if cur >= si end and cur <= ei then
+      if cur >= si and cur <= ei then
         curLine = i
         curLineSize = ei-si
         break
