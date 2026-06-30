@@ -51,7 +51,7 @@ function autoc.Init()
                   AnchorPoint = Vector2.new(0.5,0)
                 },
                 {
-                  ClassName = "ScrollingBox",
+                  ClassName = "ScrollingFrame",
                   BackgroundColor3 = Color3.fromRGB(10,10,10),
                   BorderSizePixel = 0,
                   Size = UDim2.new(1,0,1,0),
