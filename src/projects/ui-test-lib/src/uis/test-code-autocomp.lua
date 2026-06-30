@@ -112,6 +112,7 @@ function autoc.Init()
         curLine = i
         curLineSize = endIdx-startIdx
       else
+        print(#text.Text, endIdx, endI, i)
         if #text.Text == endIdx then return end
         i += 1
         calcLine(endIdx+1, i)
