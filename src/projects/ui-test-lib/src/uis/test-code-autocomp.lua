@@ -105,22 +105,24 @@ function autoc.Init()
   local function calcLine()
     local cur = text.CursorPosition
     
-    local i = 0
-    local endI = 0
+    local i = 1
+    local endI = 1
+    local txt = ""
+    local _txtc = text.Text
     
     while endI < #text.Text do
       task.wait()
-      local startIdx, endIdx = text.Text:find("[^\n]*", endI)
+      local si,ei = _txtc:find("[^\n]*")
+      _txtc = _txtc:sub(ei+1, #text.Text-ei)
+      txt = text.Text:sub(si, ei)
       
-      print(startIdx, endIdx)
-      
-      if cur >= startIdx and cur <= endIdx then
+      if cur >= si end and cur <= ei then
         curLine = i
-        curLineSize = endIdx-startIdx
+        curLineSize = ei-si
         break
       else
         i += 1
-        endI = endIdx+1
+        endI = ei+1
       end
     end
   end
