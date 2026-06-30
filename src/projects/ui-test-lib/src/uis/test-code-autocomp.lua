@@ -51,30 +51,48 @@ function autoc.Init()
                   AnchorPoint = Vector2.new(0.5,0)
                 },
                 {
-                  ClassName = "TextBox",
-                  ClearTextOnFocus = false,
+                  ClassName = "ScrollingBox",
+                  BackgroundColor3 = Color3.fromRGB(10,10,10),
                   BorderSizePixel = 0,
                   Size = UDim2.new(1,0,1,0),
-                  MultiLine = true,
                   BackgroundTransparency = 1,
                   
-                  TextColor3 = Color3.fromRGB(255,255,255),
-                  Font = Enum.Font.Code,
-                  PlaceholderText = "-- Code here",
-                  Text = "",
-                  TextSize = 10,
-                  TextXAlignment = Enum.TextXAlignment.Left,
-                  TextYAlignment = Enum.TextYAlignment.Top,
+                  AutomaticCanvasSize = Enum.AutomaticSize.XY,
+                  CanvasPosition = Vector2.new(0,0),
+                  ScrollBarThickness = 0.5,
                   
-                  Name = "Text",
-                  
+                  Name = "ScrollBox",
                   Childs = {
                     {
-                      ClassName = "UIPadding",
-                      PaddingLeft = UDim.new(0,3),
-                      PaddingTop = UDim.new(0,3),
-                      PaddingRight = UDim.new(0,3),
-                      PaddingBottom = UDim.new(0,3)
+                      ClassName = "TextBox",
+                      ClearTextOnFocus = false,
+                      BorderSizePixel = 0,
+                      Size = UDim2.new(1,0,1,0),
+                      MultiLine = true,
+                      BackgroundTransparency = 1,
+                      
+                      TextColor3 = Color3.fromRGB(255,255,255),
+                      Font = Enum.Font.Code,
+                      PlaceholderText = "-- Code here",
+                      Text = "",
+                      TextSize = 10,
+                      TextXAlignment = Enum.TextXAlignment.Left,
+                      TextYAlignment = Enum.TextYAlignment.Top,
+                      
+                      TextWrapped = false,
+                      AutomaticSize = Enum.AutomaticSize.XY,
+                      
+                      Name = "Text",
+                      
+                      Childs = {
+                        {
+                          ClassName = "UIPadding",
+                          PaddingLeft = UDim.new(0,3),
+                          PaddingTop = UDim.new(0,3),
+                          PaddingRight = UDim.new(0,3),
+                          PaddingBottom = UDim.new(0,3)
+                        }
+                      }
                     }
                   }
                 }
@@ -87,13 +105,13 @@ function autoc.Init()
   }, nil, game:GetService("CoreGui"))
 
   
-  local text = menu.Drag.Content.Text
+  local text = menu.Drag.Content.ScrollBox.Text
   local rect = CR.Create({
     {
       ClassName = "Frame",
       BackgroundColor3 = Color3.fromRGB(50,50,50),
       BorderSizePixel = 0,
-      Size = UDim2.new(0,150,0,15),
+      Size = UDim2.new(0,150,0,25),
       AnchorPoint = Vector2.new(0,0),
       Name = "AutoCBox",
       Visible = false
@@ -130,7 +148,7 @@ function autoc.Init()
   end
 
   text:GetPropertyChangedSignal("CursorPosition"):Connect(function()
-  	if text.CursorPosition <= 0 then rect.Visible = false else rect.Visible = true end
+  	if text.CursorPosition <= 1 then rect.Visible = false else rect.Visible = true end
   	calcLine()
   	
   	local fullText = text.Text
