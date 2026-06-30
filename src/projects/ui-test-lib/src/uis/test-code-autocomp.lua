@@ -14,7 +14,7 @@ function autoc.Init()
           Size = UDim2.new(0,350,0,20),
           Position = UDim2.fromScale(0.5,0.5),
           AnchorPoint = Vector2.new(0.5,0.5),
-          Name = "Test",
+          Name = "Drag",
           Childs = {
             {
               ClassName = "UICorner"
@@ -26,7 +26,6 @@ function autoc.Init()
               Size = UDim2.new(1,0,0,7),
               Position = UDim2.fromScale(0.5,1),
               AnchorPoint = Vector2.new(0.5,1),
-              Name = "Drag",
             },
             {
               ClassName = "UIDragDetector"
