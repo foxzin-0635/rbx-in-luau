@@ -130,7 +130,7 @@ function autoc.Init()
   end
 
   text:GetPropertyChangedSignal("CursorPosition"):Connect(function()
-  	if text.CursorPosition == -1 then rect.Visible = false else rect.Visible = true end
+  	if text.CursorPosition <= 0 then rect.Visible = false else rect.Visible = true end
   	calcLine()
   	
   	local fullText = text.Text
@@ -150,7 +150,7 @@ function autoc.Init()
   	)
   	
   	local lineHeight = text.TextSize * text.LineHeight
-  	local posY = lineHeight --* (curLine - 1)
+  	local posY = lineHeight * curLine --* (curLine - 1)
   	
   	rect.Position = UDim2.fromOffset(textBounds.X-7, posY)
   end)
