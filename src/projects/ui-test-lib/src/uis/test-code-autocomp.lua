@@ -103,47 +103,54 @@ function autoc.Init()
   local curLineSize = 0
 
   local function calcLine()
-    local cur = text.CursorPosition
-    
-    local i = 1
-    local endI = 1
-    local _txtc = text.Text
-    
-    local si, ei = 0, 0
-    
-    while #_txtc ~= 0 do
-      task.wait(1)
-      local _si, _ei = _txtc:find("[^\n]*")
-      si += _si
-      ei += _ei
-      _txtc = _txtc:sub(_ei, #text.Text-_ei)
-      
-      print(cur, si, _si, ei, _ei, _txtc)
-      if cur >= si and cur <= ei then
-        curLine = i
-        curLineSize = ei-si
-        break
-      else
-        i += 1
-        endI = ei+1
-      end
-    end
+  	local cur = text.CursorPosition
+  	local fullText = text.Text
+  	
+  	local currentPosition = 1
+  	local lineIndex = 1
+  	
+  	for line in fullText:gmatch("([^\n]*)\n?") do
+  		local lineLength = #line
+  		local nextPosition = currentPosition + lineLength + 1
+  	  
+  		if cur >= currentPosition and cur <= (currentPosition + lineLength) then
+  			curLine = lineIndex
+  			curLineSize = lineLength
+  			break
+  		end
+  		
+  		currentPosition = nextPosition
+  		lineIndex = lineIndex + 1
+  		
+  		if currentPosition > #fullText + 1 then
+  			break
+  		end
+  	end
   end
 
-  text:GetPropertyChangedSignal("Text"):Connect(function()
-    local t = text.Text
-    local lh = text.TextSize * text.LineHeight
-    local tbp = Instance.new("GetTextBoundsParams")
-    tbp.Size = text.TextSize
-    tbp.Text = t
-    tbp.Font = text.FontFace
-    local tbs = s:GetTextBoundsAsync(tbp)
-    calcLine()
-    
-    rect.Position = UDim2.fromOffset(
-      tbs.X * curLineSize,
-      lh * curLine
-    )
+  text:GetPropertyChangedSignal("CursorPosition"):Connect(function()
+  	calcLine()
+  	
+  	local fullText = text.Text
+  	local lines = fullText:split("\n")
+  	local currentLineText = lines[curLine] or ""
+  	
+  	local cursorIndexInLine = curLineSize - (#currentLineText - (text.CursorPosition - 1))
+  	cursorIndexInLine = math.clamp(cursorIndexInLine, 0, #currentLineText)
+  	
+  	local textBeforeCursor = currentLineText:sub(1, cursorIndexInLine)
+  	
+  	local textBounds = TextService:GetTextSize(
+  		textBeforeCursor,
+  		text.TextSize,
+  		text.Font,
+  		Vector2.new(math.huge, math.huge)
+  	)
+  	
+  	local lineHeight = text.TextSize * text.LineHeight
+  	local posY = lineHeight * (curLine - 1)
+  	
+  	rect.Position = UDim2.fromOffset(textBounds.X, posY)
   end)
   
   
