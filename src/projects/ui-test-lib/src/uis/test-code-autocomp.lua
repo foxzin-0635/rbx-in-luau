@@ -111,7 +111,7 @@ function autoc.Init()
     
     local si, ei = 0, 0
     
-    while endI < #text.Text do
+    while #_txtc ~= 0 do
       task.wait(1)
       local _si, _ei = _txtc:find("[^\n]*")
       si += _si
