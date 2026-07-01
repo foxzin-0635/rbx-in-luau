@@ -19,7 +19,7 @@ function InstanceTreeLayout.new()
   return self
 end
 
-function InstanceTreeLayout:GetInstanceByIndex(...number)
+function InstanceTreeLayout:GetInstanceByIndex(...: number)
   local args = {...}
   local inst = nil
   
