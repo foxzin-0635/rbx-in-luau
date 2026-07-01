@@ -67,7 +67,7 @@ local function pcallForNewContents()
     return res
 end
 
-if not __token:match("github_PAT_.+", 1) then
+if not __token:match("github_[pP][aA][tT]_.+", 1) then
     -- Require modules from PUBLIC GitHub repository
     githubRequire = function(path: string, ignoreDefaultPath: boolean)
         local link = "https://raw.githubusercontent.com/foxzin-0635/rbx-in-luau/main/"
