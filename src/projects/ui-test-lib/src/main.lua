@@ -141,7 +141,7 @@ end
 
 RegisterModule("src/utils/CreateRecursive.lua", "CreateRecursive", false)
 RegisterModule("src/presets/window.lua", "presets/window", false)
-RegisterModule("src/elemeents/InstanceTreeLayout.lua", "elements/InstanceTreeLayout", false)
+RegisterModule("src/elements/InstanceTreeLayout.lua", "elements/InstanceTreeLayout", false)
 RegisterModule("src/uis/test-code-autocomp.lua", "test-autoc", false)
 
 --> Build module
