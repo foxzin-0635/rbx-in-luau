@@ -1,7 +1,7 @@
 local CR = getModule("CreateRecursive")
 local window = {}
 
-function window:Create(initialInstance: Instance?, sizeX: number? sizeY: number)
+function window:Create(initialInstance: Instance?, sizeX: number? sizeY: number?)
   local menu = CR.Create({
     {
       ClassName = "ScreenGui",
